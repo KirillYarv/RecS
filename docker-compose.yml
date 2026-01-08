@@ -1,0 +1,49 @@
+services:
+  app:
+    container_name: RecS
+    build:
+      context: ./php
+      dockerfile: Dockerfile
+    volumes:
+      - ./src:/var/www
+    ports:
+      - "9000:9000"
+    depends_on:
+      - db
+    working_dir: /var/www
+
+  db:
+    image: postgres:17-alpine
+    container_name: postgres
+    volumes:
+      - ./postgresql/data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_DB: ${DB_DATABASE}
+      PGDATA: /var/lib/postgresql/data/
+
+  nginx:
+    image: nginx:alpine
+    container_name: nginx
+    volumes:
+      - ./nginx/conf.d/:/etc/nginx/conf.d/
+      - ./src:/var/www
+    ports:
+      - "8081:80"
+    depends_on:
+      - app
+      - db
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgAdmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.admin
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - "5050:80"
+    depends_on:
+      - db
