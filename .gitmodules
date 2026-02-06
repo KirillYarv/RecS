@@ -1,0 +1,3 @@
+[submodule "MLCoreAPI"]
+	path = MLCoreAPI
+	url = https://github.com/KirillYarv/MLCoreAPI
