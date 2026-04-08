@@ -37,6 +37,9 @@ RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /var/www
 
+COPY . .
+RUN composer install
+
 EXPOSE 9000
 
 CMD ["php-fpm"]
